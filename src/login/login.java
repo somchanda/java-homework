@@ -131,11 +131,13 @@ public class login extends javax.swing.JFrame {
             ConnectionDB.ps.setString(1, username);
             ConnectionDB.rs = ConnectionDB.ps.executeQuery();
             if(ConnectionDB.rs.next()){
-                ConnectionDB.ps = ConnectionDB.con.prepareStatement("SELECT * FROM tbluser WHERE password=?");
-                ConnectionDB.ps.setString(1, password);
+                ConnectionDB.ps = ConnectionDB.con.prepareStatement("SELECT * FROM tbluser WHERE username=? and password=?");
+                ConnectionDB.ps.setString(1, username);
+                ConnectionDB.ps.setString(2, password);
                 ConnectionDB.rs = ConnectionDB.ps.executeQuery();
                 if(ConnectionDB.rs.next()){
                     ConnectionDB.username = ConnectionDB.rs.getString("username");
+                    ConnectionDB.userid = Integer.parseInt(ConnectionDB.rs.getString("userID"));
                     MainForm main = new MainForm();
                     main.show();
                     this.dispose();

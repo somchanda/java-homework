@@ -110,10 +110,12 @@ public class MainForm extends javax.swing.JFrame {
         jMenu1.setText("Report");
         menuBar.add(jMenu1);
 
+        jMenu2.setForeground(new java.awt.Color(51, 102, 255));
         jMenu2.setText("Username:");
         jMenu2.setFont(new java.awt.Font("Oswald Stencil", 0, 14)); // NOI18N
         menuBar.add(jMenu2);
 
+        lbUsername.setForeground(new java.awt.Color(0, 102, 102));
         lbUsername.setText("Name");
         lbUsername.setFocusable(false);
         lbUsername.setFont(new java.awt.Font("Oswald Stencil", 1, 14)); // NOI18N
@@ -146,6 +148,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void contentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contentMenuItemActionPerformed
         product.ListProductForm pro = new ListProductForm();
+        pro.setSize(desktopPane.getWidth(), desktopPane.getHeight());
         desktopPane.add(pro);
         pro.setVisible(true);
     }//GEN-LAST:event_contentMenuItemActionPerformed
