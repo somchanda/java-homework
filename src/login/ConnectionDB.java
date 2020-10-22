@@ -17,8 +17,9 @@ public class ConnectionDB {
     static Connection con = null;
     static PreparedStatement ps;
     static ResultSet rs;
+    static String username;
     public static void connection() {
-        String JDBCURL="jdbc:mysql://localhost:3308/jre-homework?autoReconnect=true";
+        String JDBCURL="jdbc:mysql://localhost:3306/jre-homework?autoReconnect=true";
         Connection con=null;
         try{
             con = DriverManager.getConnection(JDBCURL,"root","");
