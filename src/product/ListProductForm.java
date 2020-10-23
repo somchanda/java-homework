@@ -12,6 +12,10 @@ import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import login.ConnectionDB;
 import CustomClass.Item;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -326,6 +330,7 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    FileInputStream in;
     
     private void pTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pTableMouseClicked
        
@@ -340,7 +345,13 @@ public class ListProductForm extends javax.swing.JInternalFrame {
 //            model.addRow(row);
 //            c.clearTextBox(txt);
 //        }
-        JOptionPane.showMessageDialog(null, ((Item)cmbCategory.getSelectedItem()).getId());
+        Product pro = new Product();
+        try {
+            in = new FileInputStream(txtImagePath.getText());
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ListProductForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        pro.setPhoto(in);
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
