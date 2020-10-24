@@ -26,7 +26,7 @@ public class ConnectionDB {
     static String username;
     static long userid;
     public static void connection() {
-        String JDBCURL="jdbc:mysql://localhost:3308/jre-homework?autoReconnect=true";
+        String JDBCURL="jdbc:mysql://localhost:3306/jre-homework?autoReconnect=true";
         Connection connection=null;
         try{
             connection = DriverManager.getConnection(JDBCURL,"root","");
