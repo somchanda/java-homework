@@ -20,11 +20,11 @@ import javax.swing.JOptionPane;
  * @author TD06
  */
 public class ConnectionDB {
-    static Connection con = null;
-    static PreparedStatement ps;
-    static ResultSet rs;
-    static String username;
-    static long userid;
+    static public Connection con = null;
+    static public PreparedStatement ps;
+    static public ResultSet rs;
+    static public String username;
+    static public long userid;
     public static void connection() {
         String JDBCURL="jdbc:mysql://localhost:3306/jre-homework?autoReconnect=true";
         Connection connection=null;
