@@ -10,7 +10,7 @@ package CustomClass;
  * @author TD06
  */
 public interface Action {
-    public void save();
+    public int save();
     public void update();
     public void delete();
     public void search();

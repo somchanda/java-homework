@@ -49,4 +49,14 @@ public class Function {
             txt.setText(pathImage);
         }
     }
+    public static void clearText(JTextField... txts){
+        for(JTextField txt : txts){
+            txt.setText("");
+        }
+    }
+    public static void clearImage(JLabel... lbls){
+        for(JLabel lbl : lbls){
+            lbl.setIcon(null);
+        }
+    }
 }
