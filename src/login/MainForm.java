@@ -53,6 +53,8 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        menuBar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
 

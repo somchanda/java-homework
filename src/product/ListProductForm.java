@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 
 
 /**
@@ -45,6 +46,8 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        puDeleteImage = new javax.swing.JPopupMenu();
+        itDeleteImage = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         pTable = new javax.swing.JTable();
         btnSave = new javax.swing.JButton();
@@ -71,6 +74,14 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         btnClose1 = new javax.swing.JButton();
         txtImagePath = new javax.swing.JTextField();
 
+        itDeleteImage.setText("Remove");
+        itDeleteImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itDeleteImageActionPerformed(evt);
+            }
+        });
+        puDeleteImage.add(itDeleteImage);
+
         setBorder(null);
         setClosable(true);
         setMaximizable(true);
@@ -93,7 +104,8 @@ public class ListProductForm extends javax.swing.JInternalFrame {
             }
         });
 
-        pTable.setFont(new java.awt.Font("Oswald", 0, 12)); // NOI18N
+        pTable.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pTable.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         pTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -110,6 +122,9 @@ public class ListProductForm extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        pTable.setFocusable(false);
+        pTable.setRowHeight(20);
+        pTable.setRowMargin(2);
         pTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 pTableMouseClicked(evt);
@@ -163,11 +178,26 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         });
 
         txtProductName.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        txtProductName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtProductNameFocusLost(evt);
+            }
+        });
+        txtProductName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtProductNameKeyReleased(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel1.setText("Product Name: ");
 
         txtBarcode.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        txtBarcode.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtBarcodeFocusLost(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel2.setText("Barcode");
@@ -203,7 +233,9 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel8.setText("Search by");
 
+        lblImage.setToolTipText("");
         lblImage.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        lblImage.setComponentPopupMenu(puDeleteImage);
 
         btnClose1.setFont(new java.awt.Font("Oswald", 0, 24)); // NOI18N
         btnClose1.setText("Browse");
@@ -233,13 +265,18 @@ public class ListProductForm extends javax.swing.JInternalFrame {
                     .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
-                .addGap(17, 17, 17)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(70, 70, 70)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel6))
+                        .addGap(45, 45, 45))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtQty, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -273,26 +310,23 @@ public class ListProductForm extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3))
+                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
-                        .addComponent(txtBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(txtUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel6))
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel5)
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel6)
-                        .addGap(18, 18, 18)
+                        .addGap(108, 108, 108)
                         .addComponent(jLabel7))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
@@ -300,7 +334,9 @@ public class ListProductForm extends javax.swing.JInternalFrame {
                         .addGap(10, 10, 10)
                         .addComponent(txtQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)
-                        .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
                         .addGap(18, 18, 18)
                         .addComponent(jdcExpireDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -331,9 +367,18 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     FileInputStream in;
+    private int proID =0;
+    DefaultComboBoxModel cmbCategoryModel;
     
     private void pTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pTableMouseClicked
-       
+        int row = pTable.getSelectedRow();
+        proID = Integer.valueOf(pTable.getValueAt(row, 0).toString());
+        txtProductName.setText(pTable.getValueAt(row, 1).toString());
+        txtBarcode.setText(pTable.getValueAt(row, 2).toString());
+        txtUnitPrice.setText(pTable.getValueAt(row, 3).toString());
+        txtSellPrice.setText(pTable.getValueAt(row, 4).toString());
+        txtQty.setText(pTable.getValueAt(row, 5).toString());
+        cmbCategoryModel.setSelectedItem(pTable.getValueAt(row, 6).toString());
     }//GEN-LAST:event_pTableMouseClicked
     
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -347,8 +392,34 @@ public class ListProductForm extends javax.swing.JInternalFrame {
 //        }
         Product pro = new Product();
         try {
-            in = new FileInputStream(txtImagePath.getText());
+            if(Function.checkTextBoxEmpty(txtProductName,txtBarcode, txtUnitPrice, txtSellPrice, txtQty) == 0){
+                JOptionPane.showMessageDialog(null, "Please fill all fields!", "Required field", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if(ConnectionDB.isDuplicate("tblproduct", "productName", txtProductName, "Product name is already taken")) return;
+            if(ConnectionDB.isDuplicate("tblproduct", "barcode", txtBarcode, "This barcode is aready taken")) return;
+            pro.setId(ConnectionDB.automaticID("tblproduct", "productID"));
+            pro.setProductName(txtProductName.getText().trim());
+            pro.setBarcode(Integer.valueOf(txtBarcode.getText().trim()));
+            pro.setUnitPrice(Double.valueOf(txtUnitPrice.getText().trim()));
+            pro.setSellPrice(Double.valueOf(txtSellPrice.getText().trim()));
+            pro.setCategoryID(((Item)cmbCategory.getSelectedItem()).getId());
+            if(txtImagePath.getText().equals("")){
+                in = null;
+            }else{
+                in = new FileInputStream(txtImagePath.getText());
+            }
+            pro.setPhoto(in);
+            pro.setUnitInStock(Integer.valueOf(txtQty.getText().trim()));
+            if(pro.save() != 0){
+                JOptionPane.showMessageDialog(null, "Product inserted", "successful", JOptionPane.INFORMATION_MESSAGE);
+                Function.clearText(txtProductName, txtBarcode, txtUnitPrice, txtSellPrice, txtQty, txtImagePath);
+                Function.clearImage(lblImage);
+            }else{
+                JOptionPane.showMessageDialog(null, "Cannot insert!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Cannot insert!", "Error", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(ListProductForm.class.getName()).log(Level.SEVERE, null, ex);
         }
         pro.setPhoto(in);
@@ -375,12 +446,31 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        ConnectionDB.addDataToCombo(cmbCategory, "tblcategory", "categoryID", "CategoryName");
+        cmbCategoryModel = new DefaultComboBoxModel();
+        ConnectionDB.addDataToCombo(cmbCategory,cmbCategoryModel, "tblcategory", "categoryID", "CategoryName");
+        ConnectionDB.addDataToTable(pTable, "viewProduct");
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void btnClose1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClose1ActionPerformed
        Function.setImage(lblImage, txtImagePath);
     }//GEN-LAST:event_btnClose1ActionPerformed
+
+    private void txtProductNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductNameKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtProductNameKeyReleased
+
+    private void txtProductNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtProductNameFocusLost
+        
+    }//GEN-LAST:event_txtProductNameFocusLost
+
+    private void itDeleteImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itDeleteImageActionPerformed
+        Function.clearImage(lblImage);
+        Function.clearText(txtImagePath);
+    }//GEN-LAST:event_itDeleteImageActionPerformed
+
+    private void txtBarcodeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBarcodeFocusLost
+        
+    }//GEN-LAST:event_txtBarcodeFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -390,6 +480,7 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox<String> cmbCategory;
+    private javax.swing.JMenuItem itDeleteImage;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -402,6 +493,7 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     private com.toedter.calendar.JDateChooser jdcExpireDate;
     private javax.swing.JLabel lblImage;
     private javax.swing.JTable pTable;
+    private javax.swing.JPopupMenu puDeleteImage;
     private javax.swing.JTextField txtBarcode;
     private javax.swing.JTextField txtImagePath;
     private javax.swing.JTextField txtProductName;

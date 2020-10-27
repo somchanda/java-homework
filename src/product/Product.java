@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
 import login.ConnectionDB;
 
 /**
@@ -17,7 +18,7 @@ import login.ConnectionDB;
  * @author TD06
  */
 public class Product implements Action{
-    private int id;
+    private long id;
     private String productName;
     private int barcode;
     private double unitPrice;
@@ -28,11 +29,11 @@ public class Product implements Action{
 
     
     
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -93,24 +94,34 @@ public class Product implements Action{
     }
 
     @Override
-    public void save() {
+    public int save() {
         String sql = "INSERT INTO tblproduct VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             ConnectionDB.ps = ConnectionDB.con.prepareStatement(sql);
-//            ConnectionDB.ps.setInt(1, id);
-//            ConnectionDB.ps.setString(2, productName);
-//            ConnectionDB.ps.setDouble(3, barcode);
-//            ConnectionDB.ps.setDouble(4, unitPrice);
-//            ConnectionDB.ps.setDouble(5, sellPrice);
-//            ConnectionDB.ps.setInt(6, categoryID);
-//            ConnectionDB.ps.setBinaryStream(7, photo);
-//            ConnectionDB.ps.setInt(8, unitInStock);
-            System.out.println(photo);
+            ConnectionDB.ps.setLong(1, id);
+            ConnectionDB.ps.setString(2, productName);
+            ConnectionDB.ps.setDouble(3, barcode);
+            ConnectionDB.ps.setDouble(4, unitPrice);
+            ConnectionDB.ps.setDouble(5, sellPrice);
+            ConnectionDB.ps.setInt(6, categoryID);
+            ConnectionDB.ps.setBinaryStream(7, photo);
+            ConnectionDB.ps.setInt(8, unitInStock);
+            return ConnectionDB.ps.executeUpdate();
             
         } catch (SQLException ex) {
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
         }
-        
+    }
+    public static void addProductToTable(JTable table, String viewName){
+        try {
+            ConnectionDB.rs = ConnectionDB.ps.executeQuery("SELECT * FROM " + viewName);
+            while(ConnectionDB.rs.next()){
+                Object row[] = {ConnectionDB.rs.getString("productName"), ConnectionDB.rs.getString("barcode"), ConnectionDB.rs.getString("unitPrice"), ConnectionDB.rs.getString("sellPrice"), ConnectionDB.rs.getString("productName")};
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
