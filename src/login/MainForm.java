@@ -150,7 +150,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void contentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contentMenuItemActionPerformed
         product.ListProductForm pro = new ListProductForm();
-        pro.setSize(desktopPane.getWidth(), desktopPane.getHeight());
+//        pro.setSize(desktopPane.getWidth(), desktopPane.getHeight());
         desktopPane.add(pro);
         pro.setVisible(true);
     }//GEN-LAST:event_contentMenuItemActionPerformed

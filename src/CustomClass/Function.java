@@ -68,4 +68,15 @@ public class Function {
             lbl.setIcon(null);
         }
     }
+    public static ImageIcon setImage(String pathImage, byte[] blobPic, int w, int h) {
+        ImageIcon myImg;
+        if(pathImage != null){
+            myImg = new ImageIcon(pathImage);
+        }else{
+            myImg = new ImageIcon(blobPic);
+        }
+        Image img = myImg.getImage().getScaledInstance(w, h, Image.SCALE_DEFAULT);
+        ImageIcon icon = new ImageIcon(img);
+        return icon;
+    }
 }

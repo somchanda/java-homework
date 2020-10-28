@@ -1,0 +1,3 @@
+CREATE OR REPLACE VIEW viewproduct as SELECT p.ProductID AS "Product ID", p.ProductName AS "Product Name", p.Barcode as Barcode, p.UnitPrice AS "Unit Price", p.SellPrice as "Sell Price", p.QtyInStock as Qty, c.CategoryName as "Category Name", p.Photo FROM tblproduct p INNER JOIN tblcategory c ON p.CategoryID = c.CategoryID;
+https://www.youtube.com/watch?v=53dB1avund4
+CREATE OR REPLACE VIEW viewproduct as SELECT p.ProductID, p.ProductName, p.Barcode as Barcode, p.UnitPrice, p.SellPrice, p.QtyInStock, c.CategoryName, p.Photo, c.CategoryID FROM tblproduct p INNER JOIN tblcategory c ON p.CategoryID = c.CategoryID;

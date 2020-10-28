@@ -11,15 +11,27 @@ import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import login.ConnectionDB;
 import CustomClass.Item;
+import java.awt.Font;
+import java.awt.HeadlessException;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.table.JTableHeader;
 
 /**
  *
@@ -257,54 +269,56 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(80, 80, 80)
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane1)
+                .addGap(9, 9, 9))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addGap(36, 36, 36)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(70, 70, 70)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel6))
-                        .addGap(45, 45, 45))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtQty, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jdcExpireDate, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(120, 120, 120)
-                .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(100, 100, 100)
+                        .addComponent(jLabel8)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(480, 480, 480)
+                        .addComponent(txtImagePath, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtProductName, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(70, 70, 70)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel6))
+                                .addGap(45, 45, 45))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jdcExpireDate, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtQty, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(170, 170, 170)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnClose1)
+                    .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                     .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(70, 70, 70)
-                .addComponent(jLabel8)
-                .addGap(18, 18, 18)
-                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(480, 480, 480)
-                .addComponent(txtImagePath, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17)
-                .addComponent(btnClose1))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jScrollPane1)
-                .addGap(9, 9, 9))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -332,26 +346,29 @@ public class ListProductForm extends javax.swing.JInternalFrame {
                         .addComponent(jLabel7))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(txtSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(txtQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addGap(18, 18, 18)
-                        .addComponent(jdcExpireDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8)
-                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addComponent(txtQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5))
+                                .addGap(18, 18, 18)
+                                .addComponent(jdcExpireDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(8, 8, 8)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(8, 8, 8)
+                                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtImagePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnClose1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -368,9 +385,36 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    FileInputStream in;
+    InputStream in;
     private int proID = 0;
     List<Item> category;
+    byte[] byteArray = null;
+    String imgPath;
+    
+    public void populateJtable(){
+       Product pro = new Product();
+        ArrayList<Product> pList = pro.productList();
+        String[] colNames = {"ID", "Product Name", "Barcode", "Unit Price", "Sell Price", "Qty", "Category Name", "Photo"};
+        Object [][] rows = new Object[pList.size()][8];
+        for(int i=0; i<pList.size(); i++){
+            rows[i][0] = pList.get(i).getId();
+            rows[i][1] = pList.get(i).getProductName();
+            rows[i][2] = pList.get(i).getBarcode();
+            rows[i][3] = pList.get(i).getUnitPrice();
+            rows[i][4] = pList.get(i).getUnitInStock();
+            rows[i][5] = pList.get(i).getSellPrice();
+            rows[i][6] = pList.get(i).getCateogoryName();
+            ImageIcon photo = new ImageIcon(new ImageIcon(pList.get(i).getPhoto()).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+            rows[i][7] = photo;
+        }
+        CustomTableModel model = new CustomTableModel(colNames, rows);
+        pTable.setModel(model);
+        pTable.setRowHeight(100);
+        pTable.setShowGrid(true);
+        JTableHeader th = pTable.getTableHeader();
+        th.setFont(new Font("Times New Roman", Font.BOLD, 16));
+        
+    }
 
     private void pTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pTableMouseClicked
         int row = pTable.getSelectedRow();
@@ -385,21 +429,21 @@ public class ListProductForm extends javax.swing.JInternalFrame {
                 cmbCategory.setSelectedItem(cat);
             }
         }
-        try {
-            if (pTable.getValueAt(row, 7) == null) {
-                Function.setImage(lblImage, "icon/noimage.jpg");
-            } else {
-                byte[] byteArray = (byte[]) pTable.getValueAt(row, 7);
-                ByteArrayInputStream bais = new ByteArrayInputStream(byteArray);
-                BufferedImage bImg;
-                bImg = ImageIO.read(bais);
-                Function.setImage(lblImage, bImg);
-                bais.close();
-            }
-            
-        } catch (IOException ex) {
-            Logger.getLogger(ListProductForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Image img = ((ImageIcon)pTable.getValueAt(row, 7)).getImage().getScaledInstance(lblImage.getWidth(), lblImage.getHeight(), Image.SCALE_DEFAULT);
+        ImageIcon icon = new ImageIcon(img);
+        lblImage.setIcon(icon);
+        
+        
+//            if (pTable.getValueAt(row, 7) == null) {
+//                Function.setImage(lblImage, "icon/noimage.jpg");
+//            } else {
+//                byteArray = (byte[]) pTable.getValueAt(row, 7);
+//                ByteArrayInputStream bais = new ByteArrayInputStream(byteArray);
+//                BufferedImage bImg;
+//                bImg = ImageIO.read(bais);
+//                Function.setImage(lblImage, bImg);
+//                bais.close();
+//            }
     }//GEN-LAST:event_pTableMouseClicked
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -429,41 +473,63 @@ public class ListProductForm extends javax.swing.JInternalFrame {
             pro.setUnitPrice(Double.valueOf(txtUnitPrice.getText().trim()));
             pro.setSellPrice(Double.valueOf(txtSellPrice.getText().trim()));
             pro.setCategoryID(((Item) cmbCategory.getSelectedItem()).getId());
-            if (txtImagePath.getText().equals("")) {
-                in = null;
-            } else {
-                in = new FileInputStream(txtImagePath.getText());
-            }
-            pro.setPhoto(in);
+            byte [] img = null;
+            Path pth = Paths.get(imgPath);
+            img = Files.readAllBytes(pth);
+            pro.setPhoto(img);
             pro.setUnitInStock(Integer.valueOf(txtQty.getText().trim()));
             if (pro.save() != 0) {
                 JOptionPane.showMessageDialog(null, "Product inserted", "successful", JOptionPane.INFORMATION_MESSAGE);
                 Function.clearText(txtProductName, txtBarcode, txtUnitPrice, txtSellPrice, txtQty, txtImagePath);
                 Function.clearImage(lblImage);
+                ConnectionDB.addDataToTable(pTable, "viewProduct");
             } else {
                 JOptionPane.showMessageDialog(null, "Cannot insert!", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (FileNotFoundException ex) {
+        } catch (HeadlessException | NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Cannot insert!", "Error", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(ListProductForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ListProductForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-        pro.setPhoto(in);
+//        pro.setPhoto((FileInputStream) in);
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-//        DefaultTableModel model = (DefaultTableModel) pTable.getModel();
-//        int n[] = pTable.getSelectedRows();
-//        if (n.length == 0) {
-//            JOptionPane.showMessageDialog(null, "Please selected row you want to delete!", "Not selected row", JOptionPane.WARNING_MESSAGE);
-//            return;
-//        }
-//        for (int i = n.length - 1; i >= 0; i--) {
-//            model.removeRow(n[i]);
-//        }
+        
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-
+        if (Function.checkTextBoxEmpty(txtProductName, txtBarcode, txtUnitPrice, txtSellPrice, txtQty) == 0) {
+            JOptionPane.showMessageDialog(null, "Please fill all fields!", "Required field", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (ConnectionDB.isDuplicateExcept("tblproduct", "productName", txtProductName, proID, "productID", "Product name is already taken")) {
+            return;
+        }
+        if (ConnectionDB.isDuplicateExcept("tblproduct", "barcode", txtBarcode, proID, "productID", "Barcode is already taken")) {
+            return;
+        }
+        Product pro = new Product();
+        pro.setId(proID);
+        pro.setProductName(txtProductName.getText().trim());
+        pro.setBarcode(Integer.parseInt(txtBarcode.getText()));
+        pro.setCategoryID(((Item)cmbCategory.getSelectedItem()).getId());
+        pro.setUnitPrice(Double.parseDouble(txtUnitPrice.getText()));
+        pro.setSellPrice(Double.parseDouble(txtSellPrice.getText()));
+        if(byteArray == null){
+            in = null;
+        }else{
+            in = new ByteArrayInputStream(byteArray);
+        }
+//        pro.setPhoto(in);
+        pro.setUnitInStock(Integer.parseInt(txtQty.getText()));
+        if(pro.update() != 0){
+            JOptionPane.showMessageDialog(null, "Product updated!", "Update succeed", JOptionPane.INFORMATION_MESSAGE);
+            ConnectionDB.addDataToTable(pTable, "viewProduct");
+        }else{
+            JOptionPane.showMessageDialog(null, "Product not update!", "Update fail", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -472,11 +538,23 @@ public class ListProductForm extends javax.swing.JInternalFrame {
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
         category = ConnectionDB.addDataToCombo(cmbCategory, "tblcategory", "categoryID", "CategoryName");
-        ConnectionDB.addDataToTable(pTable, "viewProduct");
+        populateJtable();
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void btnClose1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClose1ActionPerformed
-        Function.setImage(lblImage, txtImagePath);
+        String pathImage = null;
+        JFileChooser choose = new JFileChooser(FileSystemView.getFileSystemView().getFileSystemView().getHomeDirectory());
+        choose.setDialogTitle("Select an image");
+        choose.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG, gif and jpg", "png", "gif", "jpg");
+        choose.setFileFilter(filter);
+        int click = choose.showOpenDialog(null);
+        if(click == JFileChooser.APPROVE_OPTION){
+            File files = choose.getSelectedFile();
+            pathImage = files.getPath();
+            imgPath = pathImage;
+            lblImage.setIcon(Function.setImage(pathImage, null, lblImage.getWidth(), lblImage.getHeight()));
+        }
     }//GEN-LAST:event_btnClose1ActionPerformed
 
     private void txtProductNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductNameKeyReleased
@@ -489,7 +567,7 @@ public class ListProductForm extends javax.swing.JInternalFrame {
 
     private void itDeleteImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itDeleteImageActionPerformed
         Function.clearImage(lblImage);
-        Function.clearText(txtImagePath);
+        imgPath = null;
     }//GEN-LAST:event_itDeleteImageActionPerformed
 
     private void txtBarcodeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBarcodeFocusLost

@@ -35,7 +35,7 @@ public class ConnectionDB {
     static public long userid;
 
     public static void connection() {
-        String JDBCURL = "jdbc:mysql://localhost:3306/jre-homework?autoReconnect=true";
+        String JDBCURL = "jdbc:mysql://localhost:3308/jre-homework?autoReconnect=true";
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(JDBCURL, "root", "");
@@ -86,6 +86,24 @@ public class ConnectionDB {
     public static boolean isDuplicate(String table, String column, JTextField txt, String msg) {
         try {
             String sql = "SELECT * FROM " + table + " WHERE " + column + " = '" + txt.getText().trim() + "'";
+            rs = ps.executeQuery(sql);
+            int r = 0;
+            if (rs.next()) {
+                r++;
+            }
+            if (r > 0) {
+                JOptionPane.showMessageDialog(null, msg, "Required field", JOptionPane.WARNING_MESSAGE);
+                txt.grabFocus();
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ConnectionDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    public static boolean isDuplicateExcept(String table, String column, JTextField txt, int idExcept, String idField, String msg) {
+        try {
+            String sql = "SELECT * FROM " + table + " WHERE " + column + " = '" + txt.getText().trim() + "' and " + idField + " != " + idExcept;
             rs = ps.executeQuery(sql);
             int r = 0;
             if (rs.next()) {

@@ -11,7 +11,7 @@ package CustomClass;
  */
 public interface Action {
     public int save();
-    public void update();
+    public int update();
     public void delete();
     public void search();
 }
