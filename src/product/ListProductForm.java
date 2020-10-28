@@ -8,16 +8,18 @@ package product;
 import CustomClass.Function;
 import java.awt.event.MouseListener;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import login.ConnectionDB;
 import CustomClass.Item;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
-
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -30,8 +32,8 @@ public class ListProductForm extends javax.swing.JInternalFrame {
      */
     public ListProductForm() {
         this.setClosable(true);
-        BasicInternalFrameUI basicInternalFrameUI = (BasicInternalFrameUI)this.getUI();
-        for(MouseListener listener :basicInternalFrameUI.getNorthPane().getMouseListeners()){
+        BasicInternalFrameUI basicInternalFrameUI = (BasicInternalFrameUI) this.getUI();
+        for (MouseListener listener : basicInternalFrameUI.getNorthPane().getMouseListeners()) {
             basicInternalFrameUI.getNorthPane().removeMouseListener(listener);
         }
         initComponents();
@@ -367,9 +369,9 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     FileInputStream in;
-    private int proID =0;
-    DefaultComboBoxModel cmbCategoryModel;
-    
+    private int proID = 0;
+    List<Item> category;
+
     private void pTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pTableMouseClicked
         int row = pTable.getSelectedRow();
         proID = Integer.valueOf(pTable.getValueAt(row, 0).toString());
@@ -378,9 +380,28 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         txtUnitPrice.setText(pTable.getValueAt(row, 3).toString());
         txtSellPrice.setText(pTable.getValueAt(row, 4).toString());
         txtQty.setText(pTable.getValueAt(row, 5).toString());
-        cmbCategoryModel.setSelectedItem(pTable.getValueAt(row, 6).toString());
+        for (Item cat : category) {
+            if (cat.getName().equals(pTable.getValueAt(row, 6).toString())) {
+                cmbCategory.setSelectedItem(cat);
+            }
+        }
+        try {
+            if (pTable.getValueAt(row, 7) == null) {
+                Function.setImage(lblImage, "icon/noimage.jpg");
+            } else {
+                byte[] byteArray = (byte[]) pTable.getValueAt(row, 7);
+                ByteArrayInputStream bais = new ByteArrayInputStream(byteArray);
+                BufferedImage bImg;
+                bImg = ImageIO.read(bais);
+                Function.setImage(lblImage, bImg);
+                bais.close();
+            }
+            
+        } catch (IOException ex) {
+            Logger.getLogger(ListProductForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_pTableMouseClicked
-    
+
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
 //        JTextField []txt = {txtPname,txtBarcode,txtQty, txtSellPrice, txtUnitPrice};
 //        String []name= {"Product name","Barcode","Qty","Sell price","Unit price"};
@@ -392,30 +413,34 @@ public class ListProductForm extends javax.swing.JInternalFrame {
 //        }
         Product pro = new Product();
         try {
-            if(Function.checkTextBoxEmpty(txtProductName,txtBarcode, txtUnitPrice, txtSellPrice, txtQty) == 0){
+            if (Function.checkTextBoxEmpty(txtProductName, txtBarcode, txtUnitPrice, txtSellPrice, txtQty) == 0) {
                 JOptionPane.showMessageDialog(null, "Please fill all fields!", "Required field", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            if(ConnectionDB.isDuplicate("tblproduct", "productName", txtProductName, "Product name is already taken")) return;
-            if(ConnectionDB.isDuplicate("tblproduct", "barcode", txtBarcode, "This barcode is aready taken")) return;
+            if (ConnectionDB.isDuplicate("tblproduct", "productName", txtProductName, "Product name is already taken")) {
+                return;
+            }
+            if (ConnectionDB.isDuplicate("tblproduct", "barcode", txtBarcode, "This barcode is aready taken")) {
+                return;
+            }
             pro.setId(ConnectionDB.automaticID("tblproduct", "productID"));
             pro.setProductName(txtProductName.getText().trim());
             pro.setBarcode(Integer.valueOf(txtBarcode.getText().trim()));
             pro.setUnitPrice(Double.valueOf(txtUnitPrice.getText().trim()));
             pro.setSellPrice(Double.valueOf(txtSellPrice.getText().trim()));
-            pro.setCategoryID(((Item)cmbCategory.getSelectedItem()).getId());
-            if(txtImagePath.getText().equals("")){
+            pro.setCategoryID(((Item) cmbCategory.getSelectedItem()).getId());
+            if (txtImagePath.getText().equals("")) {
                 in = null;
-            }else{
+            } else {
                 in = new FileInputStream(txtImagePath.getText());
             }
             pro.setPhoto(in);
             pro.setUnitInStock(Integer.valueOf(txtQty.getText().trim()));
-            if(pro.save() != 0){
+            if (pro.save() != 0) {
                 JOptionPane.showMessageDialog(null, "Product inserted", "successful", JOptionPane.INFORMATION_MESSAGE);
                 Function.clearText(txtProductName, txtBarcode, txtUnitPrice, txtSellPrice, txtQty, txtImagePath);
                 Function.clearImage(lblImage);
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Cannot insert!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (FileNotFoundException ex) {
@@ -438,7 +463,7 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        
+
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -446,13 +471,12 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
-        cmbCategoryModel = new DefaultComboBoxModel();
-        ConnectionDB.addDataToCombo(cmbCategory,cmbCategoryModel, "tblcategory", "categoryID", "CategoryName");
+        category = ConnectionDB.addDataToCombo(cmbCategory, "tblcategory", "categoryID", "CategoryName");
         ConnectionDB.addDataToTable(pTable, "viewProduct");
     }//GEN-LAST:event_formInternalFrameOpened
 
     private void btnClose1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClose1ActionPerformed
-       Function.setImage(lblImage, txtImagePath);
+        Function.setImage(lblImage, txtImagePath);
     }//GEN-LAST:event_btnClose1ActionPerformed
 
     private void txtProductNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductNameKeyReleased
@@ -460,7 +484,7 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtProductNameKeyReleased
 
     private void txtProductNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtProductNameFocusLost
-        
+
     }//GEN-LAST:event_txtProductNameFocusLost
 
     private void itDeleteImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itDeleteImageActionPerformed
@@ -469,7 +493,7 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_itDeleteImageActionPerformed
 
     private void txtBarcodeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBarcodeFocusLost
-        
+
     }//GEN-LAST:event_txtBarcodeFocusLost
 
 

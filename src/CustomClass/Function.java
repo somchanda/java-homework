@@ -7,6 +7,7 @@ package CustomClass;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -48,6 +49,14 @@ public class Function {
             lbl.setIcon(icon);
             txt.setText(pathImage);
         }
+    }
+    public static void setImage(JLabel lbl, String pathImage) {
+            ImageIcon icon = new ImageIcon(new ImageIcon(pathImage).getImage().getScaledInstance(lbl.getWidth(), lbl.getHeight(), Image.SCALE_DEFAULT));
+            lbl.setIcon(icon);
+    }
+    public static void setImage(JLabel lbl, BufferedImage bmg) {
+            ImageIcon icon = new ImageIcon(new ImageIcon(bmg).getImage().getScaledInstance(lbl.getWidth(), lbl.getHeight(), Image.SCALE_DEFAULT));
+            lbl.setIcon(icon);
     }
     public static void clearText(JTextField... txts){
         for(JTextField txt : txts){

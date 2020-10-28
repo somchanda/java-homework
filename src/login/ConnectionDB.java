@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -63,17 +64,22 @@ public class ConnectionDB {
         return id;
     }
 
-    public static void addDataToCombo(JComboBox cmb,DefaultComboBoxModel model, String table, String idCol, String valueCol) {
+    public static List<Item> addDataToCombo(JComboBox cmb, String table, String idCol, String valueCol) {
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        List<Item> items = new ArrayList<>();
         try {
             String sql = "SELECT " + idCol + ", " + valueCol + " FROM " + table;
             rs = ps.executeQuery(sql);
             while (rs.next()) {
                 Item item = new Item(Integer.valueOf(rs.getString(idCol)), rs.getString(valueCol));
+                items.add(item);
                 model.addElement(item);
             }
             cmb.setModel(model);
+            return items;
         } catch (SQLException ex) {
             Logger.getLogger(ConnectionDB.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
 
