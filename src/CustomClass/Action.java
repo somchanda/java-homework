@@ -5,13 +5,15 @@
  */
 package CustomClass;
 
+import javax.swing.JTable;
+
 /**
  *
  * @author TD06
  */
 public interface Action {
     public int save();
-    public int update();
-    public void delete();
-    public void search();
+    public int update(boolean withImage);
+    public int delete();
+    public void search(JTable table);
 }

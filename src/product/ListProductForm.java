@@ -14,8 +14,6 @@ import CustomClass.Item;
 import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -243,6 +240,11 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         jdcExpireDate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         txtSearch.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSearchKeyReleased(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel8.setText("Search by");
@@ -388,21 +390,23 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     InputStream in;
     private int proID = 0;
     List<Item> category;
-    byte[] byteArray = null;
     String imgPath;
-    
-    public void populateJtable(){
-       Product pro = new Product();
+
+    /**
+     * To display data in product table
+     */
+    public void populateJtable() {
+        Product pro = new Product();
         ArrayList<Product> pList = pro.productList();
         String[] colNames = {"ID", "Product Name", "Barcode", "Unit Price", "Sell Price", "Qty", "Category Name", "Photo"};
-        Object [][] rows = new Object[pList.size()][8];
-        for(int i=0; i<pList.size(); i++){
+        Object[][] rows = new Object[pList.size()][8];
+        for (int i = 0; i < pList.size(); i++) {
             rows[i][0] = pList.get(i).getId();
             rows[i][1] = pList.get(i).getProductName();
             rows[i][2] = pList.get(i).getBarcode();
             rows[i][3] = pList.get(i).getUnitPrice();
-            rows[i][4] = pList.get(i).getUnitInStock();
-            rows[i][5] = pList.get(i).getSellPrice();
+            rows[i][4] = pList.get(i).getSellPrice();
+            rows[i][5] = pList.get(i).getUnitInStock();
             rows[i][6] = pList.get(i).getCateogoryName();
             ImageIcon photo = new ImageIcon(new ImageIcon(pList.get(i).getPhoto()).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
             rows[i][7] = photo;
@@ -413,7 +417,16 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         pTable.setShowGrid(true);
         JTableHeader th = pTable.getTableHeader();
         th.setFont(new Font("Times New Roman", Font.BOLD, 16));
-        
+
+    }
+
+    /**
+     * To clear text box and clear image label
+     */
+    public void clear() {
+        Function.clearText(txtProductName, txtBarcode, txtUnitPrice, txtSellPrice, txtQty, txtImagePath);
+        Function.clearImage(lblImage);
+        imgPath = null;
     }
 
     private void pTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pTableMouseClicked
@@ -423,17 +436,20 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         txtBarcode.setText(pTable.getValueAt(row, 2).toString());
         txtUnitPrice.setText(pTable.getValueAt(row, 3).toString());
         txtSellPrice.setText(pTable.getValueAt(row, 4).toString());
-        txtQty.setText(pTable.getValueAt(row, 5).toString());
+        txtQty.setText(pTable.getValueAt(row, 5) + "");
         for (Item cat : category) {
             if (cat.getName().equals(pTable.getValueAt(row, 6).toString())) {
                 cmbCategory.setSelectedItem(cat);
             }
         }
-        Image img = ((ImageIcon)pTable.getValueAt(row, 7)).getImage().getScaledInstance(lblImage.getWidth(), lblImage.getHeight(), Image.SCALE_DEFAULT);
-        ImageIcon icon = new ImageIcon(img);
-        lblImage.setIcon(icon);
-        
-        
+        try {
+            Image img = ((ImageIcon) pTable.getValueAt(row, 7)).getImage().getScaledInstance(lblImage.getWidth(), lblImage.getHeight(), Image.SCALE_DEFAULT);
+            ImageIcon icon = new ImageIcon(img);
+            lblImage.setIcon(icon);
+        } catch (ClassCastException ex) {
+            Logger.getLogger(ListProductForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
 //            if (pTable.getValueAt(row, 7) == null) {
 //                Function.setImage(lblImage, "icon/noimage.jpg");
 //            } else {
@@ -473,16 +489,18 @@ public class ListProductForm extends javax.swing.JInternalFrame {
             pro.setUnitPrice(Double.valueOf(txtUnitPrice.getText().trim()));
             pro.setSellPrice(Double.valueOf(txtSellPrice.getText().trim()));
             pro.setCategoryID(((Item) cmbCategory.getSelectedItem()).getId());
-            byte [] img = null;
+            byte[] img;
+            if (imgPath == null) {
+                imgPath = "icon/noimage.jpg";
+            }
             Path pth = Paths.get(imgPath);
             img = Files.readAllBytes(pth);
             pro.setPhoto(img);
-            pro.setUnitInStock(Integer.valueOf(txtQty.getText().trim()));
+            pro.setUnitInStock(Integer.parseInt(txtQty.getText().trim()));
             if (pro.save() != 0) {
                 JOptionPane.showMessageDialog(null, "Product inserted", "successful", JOptionPane.INFORMATION_MESSAGE);
-                Function.clearText(txtProductName, txtBarcode, txtUnitPrice, txtSellPrice, txtQty, txtImagePath);
-                Function.clearImage(lblImage);
-                ConnectionDB.addDataToTable(pTable, "viewProduct");
+                clear();
+                populateJtable();
             } else {
                 JOptionPane.showMessageDialog(null, "Cannot insert!", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -496,7 +514,24 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        
+        if (JOptionPane.showConfirmDialog(null, "Do you want to delete selectd rows?", "Delete product", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+            return;
+        }
+        int[] rows = pTable.getSelectedRows();
+        Product p = new Product();
+        int nRowDelete = 0;
+        for (int row : rows) {
+            long id = Long.parseLong(pTable.getValueAt(row, 0).toString());
+            p.setId(id);
+            nRowDelete += p.delete();
+        }
+        if (nRowDelete == 0) {
+            JOptionPane.showMessageDialog(null, "No row deleted", "Delete fail!", JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, nRowDelete + " rows is deleted", "Delete succesful", JOptionPane.INFORMATION_MESSAGE);
+            clear();
+            populateJtable();
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
@@ -514,26 +549,36 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         pro.setId(proID);
         pro.setProductName(txtProductName.getText().trim());
         pro.setBarcode(Integer.parseInt(txtBarcode.getText()));
-        pro.setCategoryID(((Item)cmbCategory.getSelectedItem()).getId());
+        pro.setCategoryID(((Item) cmbCategory.getSelectedItem()).getId());
         pro.setUnitPrice(Double.parseDouble(txtUnitPrice.getText()));
         pro.setSellPrice(Double.parseDouble(txtSellPrice.getText()));
-        if(byteArray == null){
-            in = null;
-        }else{
-            in = new ByteArrayInputStream(byteArray);
-        }
-//        pro.setPhoto(in);
         pro.setUnitInStock(Integer.parseInt(txtQty.getText()));
-        if(pro.update() != 0){
+        int status;
+        if (imgPath != null) {
+            Path pth = Paths.get(imgPath);
+            byte[] image;
+            try {
+                image = Files.readAllBytes(pth);
+                pro.setPhoto(image);
+            } catch (IOException ex) {
+                Logger.getLogger(ListProductForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            status = pro.update(true);
+        } else {
+            status = pro.update(false);
+        }
+
+        if (status != 0) {
             JOptionPane.showMessageDialog(null, "Product updated!", "Update succeed", JOptionPane.INFORMATION_MESSAGE);
-            ConnectionDB.addDataToTable(pTable, "viewProduct");
-        }else{
+            clear();
+            populateJtable();
+        } else {
             JOptionPane.showMessageDialog(null, "Product not update!", "Update fail", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
@@ -546,10 +591,10 @@ public class ListProductForm extends javax.swing.JInternalFrame {
         JFileChooser choose = new JFileChooser(FileSystemView.getFileSystemView().getFileSystemView().getHomeDirectory());
         choose.setDialogTitle("Select an image");
         choose.setAcceptAllFileFilterUsed(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG, gif and jpg", "png", "gif", "jpg");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG, gif and jpg", "png", "gif", "jpg", "jpeg");
         choose.setFileFilter(filter);
         int click = choose.showOpenDialog(null);
-        if(click == JFileChooser.APPROVE_OPTION){
+        if (click == JFileChooser.APPROVE_OPTION) {
             File files = choose.getSelectedFile();
             pathImage = files.getPath();
             imgPath = pathImage;
@@ -573,6 +618,15 @@ public class ListProductForm extends javax.swing.JInternalFrame {
     private void txtBarcodeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBarcodeFocusLost
 
     }//GEN-LAST:event_txtBarcodeFocusLost
+
+    private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
+        Product p = new Product();
+        p.setProductName(txtSearch.getText().trim());
+        if(Function.isNumeric(txtSearch.getText().trim())){
+            p.setBarcode(Integer.parseInt(txtSearch.getText().trim()));
+        }
+        p.search(pTable);
+    }//GEN-LAST:event_txtSearchKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
