@@ -621,9 +621,13 @@ public class ListProductForm extends javax.swing.JInternalFrame {
 
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchKeyReleased
         Product p = new Product();
-        p.setProductName(txtSearch.getText().trim());
-        if(Function.isNumeric(txtSearch.getText().trim())){
-            p.setBarcode(Integer.parseInt(txtSearch.getText().trim()));
+        String search = txtSearch.getText().trim();
+        p.setProductName(search);
+        if(Function.isNumeric(search)){
+            p.setBarcode(Integer.parseInt(search));
+        }
+        if(Function.isNumeric(search)){
+            p.setId(Long.parseLong(search));
         }
         p.search(pTable);
     }//GEN-LAST:event_txtSearchKeyReleased

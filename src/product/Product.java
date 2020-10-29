@@ -242,12 +242,13 @@ public class Product implements Action {
     }
     
     public ArrayList<Product> productListByNameAndBarcode() {
-        String sql = "SELECT * FROM viewProduct WHERE productName LIKE CONCAT( '%',?,'%') OR barcode = ?";
+        String sql = "SELECT * FROM viewProduct WHERE productName LIKE CONCAT( '%',?,'%') OR barcode = ? OR productID = ?";
         ArrayList<Product> pList = new ArrayList<>();
         try {
             ConnectionDB.ps = ConnectionDB.con.prepareStatement(sql);
             ConnectionDB.ps.setString(1, this.productName);
             ConnectionDB.ps.setLong(2, this.barcode);
+            ConnectionDB.ps.setLong(3, this.id);
             ConnectionDB.rs = ConnectionDB.ps.executeQuery();
             while (ConnectionDB.rs.next()) {
                 Product p = new Product(
