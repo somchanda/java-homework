@@ -283,7 +283,11 @@ public class Product implements Action {
             rows[i][4] = pList.get(i).getSellPrice();
             rows[i][5] = pList.get(i).getUnitInStock();
             rows[i][6] = pList.get(i).getCateogoryName();
-            ImageIcon pic = new ImageIcon(new ImageIcon(pList.get(i).getPhoto()).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+            ImageIcon pic = null;
+            if(pList.get(i).getPhoto() != null)
+                pic = new ImageIcon(new ImageIcon(pList.get(i).getPhoto()).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+            else
+                pic = new ImageIcon(new ImageIcon("icon/noimage.jpg").getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
             rows[i][7] = pic;
         }
         CustomTableModel model = new CustomTableModel(colNames, rows);
