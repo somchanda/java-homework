@@ -408,7 +408,11 @@ public class ListProductForm extends javax.swing.JInternalFrame {
             rows[i][4] = pList.get(i).getSellPrice();
             rows[i][5] = pList.get(i).getUnitInStock();
             rows[i][6] = pList.get(i).getCateogoryName();
-            ImageIcon photo = new ImageIcon(new ImageIcon(pList.get(i).getPhoto()).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+            ImageIcon photo = null;
+            if(pList.get(i).getPhoto() != null)
+                photo = new ImageIcon(new ImageIcon(pList.get(i).getPhoto()).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+            else
+                photo = new ImageIcon(new ImageIcon("icon/noimage.jpg").getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
             rows[i][7] = photo;
         }
         CustomTableModel model = new CustomTableModel(colNames, rows);
