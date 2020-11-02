@@ -154,9 +154,7 @@ public class Sale extends javax.swing.JInternalFrame {
 
     private void txtBarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBarcodeKeyPressed
         if(KeyEvent.VK_ENTER == evt.getKeyCode()){
-//            Order.ScanBarcode(pTable, txtBarcode);
-              DefaultTableModel model = (DefaultTableModel)pTable.getModel();
-              Order.ScanBarcode(model, txtBarcode);
+              Order.scanBarcode(pTable, txtBarcode);
         }
     }//GEN-LAST:event_txtBarcodeKeyPressed
 
