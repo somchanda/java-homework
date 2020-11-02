@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import login.ConnectionDB;
+import sale.Order;
 
 /**
  *
@@ -240,7 +241,7 @@ public class Product implements Action {
         }
         return pList;
     }
-    
+
     public ArrayList<Product> productListByNameAndBarcode() {
         String sql = "SELECT * FROM viewProduct WHERE productName LIKE CONCAT( '%',?,'%') OR barcode = ? OR productID = ?";
         ArrayList<Product> pList = new ArrayList<>();
@@ -269,9 +270,9 @@ public class Product implements Action {
         }
         return pList;
     }
-    
+
     @Override
-    public void search(JTable table){
+    public void search(JTable table) {
         ArrayList<Product> pList = this.productListByNameAndBarcode();
         String[] colNames = {"ID", "Product Name", "Barcode", "Unit Price", "Sell Price", "Qty", "Category Name", "Photo"};
         Object[][] rows = new Object[pList.size()][8];
@@ -284,10 +285,11 @@ public class Product implements Action {
             rows[i][5] = pList.get(i).getUnitInStock();
             rows[i][6] = pList.get(i).getCateogoryName();
             ImageIcon pic = null;
-            if(pList.get(i).getPhoto() != null)
+            if (pList.get(i).getPhoto() != null) {
                 pic = new ImageIcon(new ImageIcon(pList.get(i).getPhoto()).getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
-            else
+            } else {
                 pic = new ImageIcon(new ImageIcon("icon/noimage.jpg").getImage().getScaledInstance(100, 100, Image.SCALE_DEFAULT));
+            }
             rows[i][7] = pic;
         }
         CustomTableModel model = new CustomTableModel(colNames, rows);
@@ -296,5 +298,30 @@ public class Product implements Action {
         table.setShowGrid(true);
         JTableHeader th = table.getTableHeader();
         th.setFont(new Font("Times New Roman", Font.BOLD, 16));
+    }
+
+    public static ArrayList<Product> getProductByBarcode(String barcode) {
+        String sql = "SELECT * FROM tblproduct WHERE barcode = ?";
+        ArrayList<Product> list = new ArrayList<>();
+        try {
+            ConnectionDB.ps = ConnectionDB.con.prepareStatement(sql);
+            ConnectionDB.ps.setInt(1, Integer.valueOf(barcode.trim()));
+            ConnectionDB.rs = ConnectionDB.ps.executeQuery();
+            if (ConnectionDB.rs.next()) {
+                Product p = new Product(Long.valueOf(ConnectionDB.rs.getString("productID")),
+                        ConnectionDB.rs.getString("productName"),
+                        Integer.parseInt(ConnectionDB.rs.getString("barcode")),
+                        Double.valueOf(ConnectionDB.rs.getString("unitPrice")),
+                        Double.valueOf(ConnectionDB.rs.getString("sellPrice")),
+                        Integer.valueOf(ConnectionDB.rs.getString("categoryID")),
+                        ConnectionDB.rs.getBytes("photo"),
+                        Integer.valueOf(ConnectionDB.rs.getString("qtyInStock"))
+                );
+                list.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 }

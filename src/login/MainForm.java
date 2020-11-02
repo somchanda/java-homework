@@ -7,6 +7,7 @@ package login;
 
 import javax.swing.JFrame;
 import product.ListProductForm;
+import sale.Sale;
 
 /**
  *
@@ -42,6 +43,7 @@ public class MainForm extends javax.swing.JFrame {
         deleteMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         contentMenuItem = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         lbUsername = new javax.swing.JMenu();
@@ -107,6 +109,14 @@ public class MainForm extends javax.swing.JFrame {
         });
         helpMenu.add(contentMenuItem);
 
+        jMenuItem1.setText("Sale");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        helpMenu.add(jMenuItem1);
+
         menuBar.add(helpMenu);
 
         jMenu1.setText("Report");
@@ -155,6 +165,12 @@ public class MainForm extends javax.swing.JFrame {
         pro.setVisible(true);
     }//GEN-LAST:event_contentMenuItemActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        Sale sale = new Sale();
+        desktopPane.add(sale);
+        sale.show();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -201,6 +217,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenu lbUsername;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
