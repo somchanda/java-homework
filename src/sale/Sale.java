@@ -7,7 +7,6 @@ package sale;
 
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -44,6 +43,23 @@ public class Sale extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
 
         setClosable(true);
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(0, 153, 153));
 
@@ -60,16 +76,24 @@ public class Sale extends javax.swing.JInternalFrame {
 
         pTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {},
-                {},
-                {},
-                {}
+
             },
             new String [] {
-
+                "Product Name", "Qty", "price", "Amount", "productID", "barcode"
             }
         ));
+        pTable.setToolTipText("");
         jScrollPane1.setViewportView(pTable);
+        if (pTable.getColumnModel().getColumnCount() > 0) {
+            pTable.getColumnModel().getColumn(0).setPreferredWidth(400);
+            pTable.getColumnModel().getColumn(1).setPreferredWidth(50);
+            pTable.getColumnModel().getColumn(4).setMinWidth(0);
+            pTable.getColumnModel().getColumn(4).setPreferredWidth(0);
+            pTable.getColumnModel().getColumn(4).setMaxWidth(0);
+            pTable.getColumnModel().getColumn(5).setMinWidth(0);
+            pTable.getColumnModel().getColumn(5).setPreferredWidth(0);
+            pTable.getColumnModel().getColumn(5).setMaxWidth(0);
+        }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -96,6 +120,11 @@ public class Sale extends javax.swing.JInternalFrame {
         lblTotalAmount.setText("0");
 
         txtRecieve.setFont(new java.awt.Font("Khmer OS", 0, 14)); // NOI18N
+        txtRecieve.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtRecieveKeyPressed(evt);
+            }
+        });
 
         txtReturn.setEditable(false);
         txtReturn.setFont(new java.awt.Font("Khmer OS", 0, 14)); // NOI18N
@@ -153,10 +182,40 @@ public class Sale extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtBarcodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBarcodeKeyPressed
-        if(KeyEvent.VK_ENTER == evt.getKeyCode()){
-              Order.scanBarcode(pTable, txtBarcode);
+        if (KeyEvent.VK_ENTER == evt.getKeyCode()) {
+            Order.scanBarcode(pTable, txtBarcode);
+            txtBarcode.setText("");
+            txtBarcode.grabFocus();
+            lblTotalAmount.setText(Order.getTotalAmount(pTable) + "");
         }
     }//GEN-LAST:event_txtBarcodeKeyPressed
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
+
+    }//GEN-LAST:event_formInternalFrameOpened
+
+    private void txtRecieveKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRecieveKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (txtRecieve.getText().equals("")) {
+                txtRecieve.grabFocus();
+                return;
+            }
+            try {
+                double cRecieve = Double.parseDouble(txtRecieve.getText()),
+                        total = Double.parseDouble(lblTotalAmount.getText()),
+                        cReturn;
+                if(cRecieve >= total){
+                    cReturn = cRecieve - total;
+                    txtReturn.setText(cReturn + "");
+                }else{
+                    JOptionPane.showMessageDialog(null, "Cash recieve not enought");
+                }
+            } catch (NumberFormatException ex) {
+                System.out.println(ex.getMessage());
+            }
+
+        }
+    }//GEN-LAST:event_txtRecieveKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
